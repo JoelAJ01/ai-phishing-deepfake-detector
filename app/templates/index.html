@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI-Generated Phishing Detector</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 20px; background: #0f1115; color: #e6e6e6; }
+  h1 { font-size: 1.5rem; }
+  p.sub { color: #9aa0a6; margin-top: -8px; }
+  textarea { width: 100%; height: 180px; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1d23; color: #e6e6e6; font-size: 14px; box-sizing: border-box; }
+  button { margin-top: 12px; padding: 10px 20px; border: none; border-radius: 6px; background: #4f8cff; color: white; font-size: 15px; cursor: pointer; }
+  button:hover { background: #3d75e0; }
+  .result { margin-top: 24px; padding: 20px; border-radius: 10px; }
+  .high { background: #3a1414; border: 1px solid #8b2c2c; }
+  .medium { background: #3a2f14; border: 1px solid #8b6b2c; }
+  .low { background: #14311a; border: 1px solid #2c8b45; }
+  .score { font-size: 2rem; font-weight: bold; }
+  .flags { margin-top: 12px; font-size: 14px; color: #ccc; }
+  .flags span { display: inline-block; background: #2a2d33; padding: 3px 8px; border-radius: 4px; margin: 2px; }
+</style>
+</head>
+<body>
+  <h1>AI-Generated Phishing & Social Engineering Detector</h1>
+  <p class="sub">Paste an email or message below to check its risk score.</p>
+
+  <form method="POST">
+    <textarea name="message" placeholder="Paste the email/message text here...">{{ message_text }}</textarea>
+    <br>
+    <button type="submit">Analyze</button>
+  </form>
+
+  {% if result %}
+    {% if result.risk_score >= 75 %}
+      {% set cls = "high" %}
+    {% elif result.risk_score >= 40 %}
+      {% set cls = "medium" %}
+    {% else %}
+      {% set cls = "low" %}
+    {% endif %}
+    <div class="result {{ cls }}">
+      <div class="score">{{ result.risk_score }}% Risk</div>
+      <div>{{ result.verdict }}</div>
+      <div class="flags">
+        {% if result.flagged_urgency_words %}
+          <div><strong>Urgency signals:</strong>
+            {% for w in result.flagged_urgency_words %}<span>{{ w }}</span>{% endfor %}
+          </div>
+        {% endif %}
+        {% if result.flagged_authority_words %}
+          <div><strong>Authority signals:</strong>
+            {% for w in result.flagged_authority_words %}<span>{{ w }}</span>{% endfor %}
+          </div>
+        {% endif %}
+        {% if result.flagged_financial_words %}
+          <div><strong>Financial ask signals:</strong>
+            {% for w in result.flagged_financial_words %}<span>{{ w }}</span>{% endfor %}
+          </div>
+        {% endif %}
+        <div style="margin-top:8px;">
+          URLs found: {{ result.url_count }} &nbsp;|&nbsp;
+          Exclamation marks: {{ result.exclamation_count }} &nbsp;|&nbsp;
+          Sentence uniformity (burstiness): {{ result.burstiness }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</body>
+</html>

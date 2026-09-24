@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Flutter / Dart
+mobile_app/.dart_tool/
+mobile_app/.flutter-plugins
+mobile_app/.flutter-plugins-dependencies
+mobile_app/build/
+mobile_app/android/.gradle/
+mobile_app/android/local.properties
+mobile_app/ios/Pods/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Environment variables / secrets
+.env
+*.pem
+*.key
+
+# Large raw data (keep only the sample in git)
+data/enron_spam_data.csv
+data/*.zip
